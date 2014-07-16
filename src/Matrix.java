@@ -3,15 +3,9 @@ public class Matrix {
 	
 	private int[][] matrix;
 	private String name;
+	
 	public Matrix(String name){
 		this.matrix = new int[Bankers.MAX_PROCESSES][Bankers.MAX_RESOURCES];
-		this.name = name;
-		
-		initialize();
-	}
-	
-	public Matrix(String name, int x, int y){
-		this.matrix = new int[x][y];
 		this.name = name;
 		
 		initialize();
