@@ -5,10 +5,14 @@ public class Matrix {
 	
 	public Matrix(){
 		this.matrix = new int[Bankers.MAX_PROCESSES][Bankers.MAX_RESOURCES];
+		
+		initialize();
 	}
 	
 	public Matrix(int x, int y){
 		this.matrix = new int[x][y];
+		
+		initialize();
 	}
 	
 	//J will represent the appropriate row to be summed
@@ -49,5 +53,32 @@ public class Matrix {
 			}
 		}
 		return temp;
+	}
+	
+	//Initialize everything to our null valid (-1)
+	private void initialize(){
+		for(int i=0; i < Bankers.MAX_PROCESSES; i++){
+			for(int j=0;j<Bankers.MAX_RESOURCES; j++){
+				matrix[i][j] = -1;
+			}
+		}
+	}
+	
+	@Override
+	public String toString(){
+		String str = "";
+		for(int i=0; i < Bankers.MAX_PROCESSES; i++){
+			for(int j = 0; j < Bankers.MAX_RESOURCES; j++){
+				if(matrix[i][j] == -1){
+					str += "null ";
+				}else{
+					str += matrix[i][j] + " ";
+				}
+			}
+			
+			str += "\n";
+		}
+		
+		return str;
 	}
 }
