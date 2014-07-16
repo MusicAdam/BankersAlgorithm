@@ -16,6 +16,7 @@ public class Matrix {
 		int val = 0;
 		
 		for(int i=0; i<Bankers.MAX_RESOURCES; i++){
+			if(matrix[i][j] != -1)
 				val+=matrix[i][j];
 		}
 		return val;
@@ -23,6 +24,7 @@ public class Matrix {
 	
 	public int[][] getMatrix(){ return this.matrix;}
 	public String getName(){ return this.name;}
+	
 	public int[] getRow(int index){
 		int[] row = new int[Bankers.MAX_PROCESSES];
 		for(int i=0; i< Bankers.MAX_PROCESSES; i++){
