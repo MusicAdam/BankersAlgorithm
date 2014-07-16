@@ -2,9 +2,10 @@
 public class Matrix {
 	
 	private int[][] matrix;
-	
-	public Matrix(){
+	private String name;
+	public Matrix(String name){
 		this.matrix = new int[Bankers.MAX_PROCESSES][Bankers.MAX_RESOURCES];
+		this.name = name;
 	}
 	
 	public Matrix(int x, int y){
@@ -22,7 +23,7 @@ public class Matrix {
 	}
 	
 	public int[][] getMatrix(){ return this.matrix;}
-	
+	public String getName(){ return this.name;}
 	public int[] getRow(int index){
 		int[] row = new int[Bankers.MAX_PROCESSES];
 		for(int i=0; i< Bankers.MAX_PROCESSES; i++){
