@@ -43,7 +43,7 @@ public class Bankers {
 	}
 	
 	public static void main(String[] args) {
-		Matrix test = new Matrix();
+		Matrix test = new Matrix("test matrix");
 		System.out.println(test);
 	}
 
