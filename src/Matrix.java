@@ -68,14 +68,17 @@ public class Matrix {
 	
 	@Override
 	public String toString(){
-		String str = "";
+		String str = name + ":\n    ";
+		for(int x = 0; x < Bankers.MAX_RESOURCES; x++){
+			str += "R" + x + " ";
+		}
+		
+		str += "\n";
+		
 		for(int i=0; i < Bankers.MAX_PROCESSES; i++){
+			str += "P" + i + ": ";
 			for(int j = 0; j < Bankers.MAX_RESOURCES; j++){
-				if(matrix[i][j] == -1){
-					str += "null ";
-				}else{
-					str += matrix[i][j] + " ";
-				}
+				str += matrix[i][j] + " ";
 			}
 			
 			str += "\n";
