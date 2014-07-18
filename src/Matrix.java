@@ -25,6 +25,16 @@ public class Matrix {
 	public int[][] getMatrix(){ return this.matrix;}
 	public String getName(){ return this.name;}
 	
+	//Sets the values of a row by a given index to the values passed in the int array
+	public void setRow(int index, int[] values){
+		if(index < 0 || index >= Bankers.MAX_PROCESSES) return; //Sanity check
+		
+		for(int i = 0; i < Bankers.MAX_RESOURCES; i++){
+			if(i >= values.length) break; //Sanity check on values index
+			matrix[index][i] = values[i];
+		}
+	}
+	
 	public int[] getRow(int index){
 		int[] row = new int[Bankers.MAX_PROCESSES];
 		for(int i=0; i< Bankers.MAX_PROCESSES; i++){
@@ -74,6 +84,9 @@ public class Matrix {
 		for(int i=0; i < Bankers.MAX_PROCESSES; i++){
 			str += "P" + i + ": ";
 			for(int j = 0; j < Bankers.MAX_RESOURCES; j++){
+				if(matrix[i][j] < 10 && matrix[i][j] > -1)
+					str += " "; //Add this space to make it look correct for single digits (three digits will look bad still)
+				
 				str += matrix[i][j] + " ";
 			}
 			
