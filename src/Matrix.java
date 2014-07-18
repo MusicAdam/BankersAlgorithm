@@ -36,18 +36,18 @@ public class Matrix {
 	}
 	
 	public int[] getRow(int index){
-		int[] row = new int[Bankers.MAX_PROCESSES];
-		for(int i=0; i< Bankers.MAX_PROCESSES; i++){
-			row[i] = matrix[i][index];
+		int[] row = new int[Bankers.MAX_RESOURCES];
+		for(int i=0; i< Bankers.MAX_RESOURCES; i++){
+			row[i] = matrix[index][i]; 
 		}
 		return row;
 	}
 	
 	public int[] getCol(int index){
-		int col[] = new int[Bankers.MAX_RESOURCES];
+		int col[] = new int[Bankers.MAX_PROCESSES];
 		
-		for(int i=0; i<Bankers.MAX_RESOURCES; i++){
-			col[i] = matrix[index][i];
+		for(int i=0; i<Bankers.MAX_PROCESSES; i++){
+			col[i] = matrix[i][index];
 		}
 		return col;
 	}
@@ -57,7 +57,7 @@ public class Matrix {
 		int[][] temp = new int[Bankers.MAX_RESOURCES][Bankers.MAX_PROCESSES];
 		for(int i=0; i < Bankers.MAX_PROCESSES; i++){
 			for(int j=0;j<Bankers.MAX_RESOURCES; j++){
-				temp[j][i] = this.matrix[j][i];
+				temp[i][j] = this.matrix[i][j];
 			}
 		}
 		return temp;
