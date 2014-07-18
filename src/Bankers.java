@@ -50,6 +50,7 @@ public class Bankers {
 		System.out.println(test);
 		System.out.println(test.getCol(0)[1]);
 		System.out.println(testCopy);
+		System.out.println("Row 0 sum: " + test.getRowSum(0));
 	}
 
 }

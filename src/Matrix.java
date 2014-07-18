@@ -12,10 +12,10 @@ public class Matrix {
 	}
 	
 	//J will represent the appropriate row to be summed
-	public int getRowSum(int j){
+	public int getRowSum(int i){
 		int val = 0;
 		
-		for(int i=0; i<Bankers.MAX_RESOURCES; i++){
+		for(int j=0; j<Bankers.MAX_RESOURCES; j++){
 			if(matrix[i][j] != -1)
 				val+=matrix[i][j];
 		}
