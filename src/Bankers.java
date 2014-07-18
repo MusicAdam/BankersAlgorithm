@@ -28,10 +28,13 @@ public class Bankers {
 			p = new Process(processes.size(), maxResources);
 			processes.add(p);
 			
-			//Add to allocation matrix
-			//Add to max matrix
-			//Add to need matrix
 			//Check if add is valid
+			//Yes
+				//Add to allocation matrix
+				//Add to max matrix
+				//Add to need matrix
+			//No
+				//Skip or retry? i dunno
 		}
 		
 		return p;
@@ -42,16 +45,19 @@ public class Bankers {
 		processes = new ArrayList<Process>();
 	}
 	
+	public void run(){
+		/*do{
+			//Generate new process
+			//Update matrices
+			//Simulate allocation
+			// ??
+			//Profit
+		}while(NOT EXIT CONDITION);*/
+	}
+	
 	public static void main(String[] args) {
-		Matrix test = new Matrix("test matrix");
-		test.setRow(0, new int[]{1, 2, 3, 4});
-		test.setRow(1, new int[]{6});
-		Matrix testCpy = test.copy();
-		testCpy.setRow(0,  new int[]{3, 2, 1, 1});
-		System.out.println(test.rowIsLessThanOrEqualTo(0, test));//true
-		System.out.println(test.rowIsLessThanOrEqualTo(0, testCpy));//false
-		testCpy.setRow(0,  new int[]{3, 2, 4, 4});
-		System.out.println(test.rowIsLessThanOrEqualTo(0, testCpy));//should be true, 
+		Bankers b = new Bankers();
+		b.run();
 	}
 
 }
