@@ -46,7 +46,12 @@ public class Bankers {
 		Matrix test = new Matrix("test matrix");
 		test.setRow(0, new int[]{1, 2, 3, 4});
 		test.setRow(1, new int[]{6});
-		System.out.println(test.add(test));
+		Matrix testCpy = test.copy();
+		testCpy.setRow(0,  new int[]{3, 2, 1, 1});
+		System.out.println(test.rowIsLessThanOrEqualTo(0, test));//true
+		System.out.println(test.rowIsLessThanOrEqualTo(0, testCpy));//false
+		testCpy.setRow(0,  new int[]{3, 2, 4, 4});
+		System.out.println(test.rowIsLessThanOrEqualTo(0, testCpy));//should be true, 
 	}
 
 }

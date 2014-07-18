@@ -60,9 +60,9 @@ public class Matrix {
 			int[] row = new int[Bankers.MAX_RESOURCES];
 			
 			for(int j = 0; j < Bankers.MAX_RESOURCES; j++){
-				if(matrix[i][j] == -1 || m.matrix[i][j] == -1){ //Make sure the element isn't psuedo-null
+				if(matrix[i][j] == -1 || m.matrix[i][j] == -1){ //Maintain pseudo-nullness
 					row[j] = -1;
-				}else{ //Do the dang thing (sum)
+				}else{ //Do the dang thing (add)
 					row[j] = matrix[i][j] + m.matrix[i][j];
 				}
 			}
@@ -71,6 +71,42 @@ public class Matrix {
 		}
 		
 		return result;
+	}
+	
+	//Subtracts the matrix m from this matrix. this - m
+	public Matrix sub(Matrix m){
+		Matrix result = new Matrix(name + " - " + m.name);
+		
+		for(int i = 0; i < Bankers.MAX_PROCESSES; i++){
+			int[] row = new int[Bankers.MAX_RESOURCES];
+			
+			for(int j = 0; j < Bankers.MAX_RESOURCES; j++){
+				if(matrix[i][j] == -1 || m.matrix[i][j] == -1){ //Maintain pseudo-nullness
+					row[j] = -1;
+				}else{ //subtract
+					row[j] = matrix[i][j] - m.matrix[i][j];
+				}
+			}
+			
+			result.setRow(i, row);
+		}
+		
+		return result;
+	}
+	
+	//Checks this.row[index] <= m.row[index]
+	public boolean rowIsLessThanOrEqualTo(int index, Matrix m){
+		if(index < 0 || index >= Bankers.MAX_PROCESSES) return false; //Sanity check
+		
+		boolean result = true;
+		
+		for(int i = 0; i < Bankers.MAX_RESOURCES; i++){
+			result = matrix[index][i] <= m.matrix[index][i];
+			if(!result) break; //Break when false incase following values result in true
+		}
+		
+		return result;
+		
 	}
 	
 	//Copy fxn
