@@ -52,6 +52,27 @@ public class Matrix {
 		return col;
 	}
 	
+	//Adds this matrix to the other matrix, you better not give it a different sized matrix. You don't want to know what will happen (indexOutOfBoundsException...)
+	public Matrix add(Matrix m){
+		Matrix result = new Matrix(name + " + " + m.name);
+		
+		for(int i = 0; i < Bankers.MAX_PROCESSES; i++){
+			int[] row = new int[Bankers.MAX_RESOURCES];
+			
+			for(int j = 0; j < Bankers.MAX_RESOURCES; j++){
+				if(matrix[i][j] == -1 || m.matrix[i][j] == -1){ //Make sure the element isn't psuedo-null
+					row[j] = -1;
+				}else{ //Do the dang thing (sum)
+					row[j] = matrix[i][j] + m.matrix[i][j];
+				}
+			}
+			
+			result.setRow(i, row);
+		}
+		
+		return result;
+	}
+	
 	//Copy fxn
 	public Matrix copy(){
 		int[][] temp = new int[Bankers.MAX_RESOURCES][Bankers.MAX_PROCESSES];

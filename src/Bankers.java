@@ -46,11 +46,7 @@ public class Bankers {
 		Matrix test = new Matrix("test matrix");
 		test.setRow(0, new int[]{1, 2, 3, 4});
 		test.setRow(1, new int[]{6});
-		Matrix testCopy = test.copy();
-		System.out.println(test);
-		System.out.println(test.getCol(0)[1]);
-		System.out.println(testCopy);
-		System.out.println("Row 0 sum: " + test.getRowSum(0));
+		System.out.println(test.add(test));
 	}
 
 }
