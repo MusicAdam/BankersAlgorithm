@@ -53,14 +53,16 @@ public class Matrix {
 	}
 	
 	//Copy fxn
-	public int[][] Copy(){
+	public Matrix copy(){
 		int[][] temp = new int[Bankers.MAX_RESOURCES][Bankers.MAX_PROCESSES];
 		for(int i=0; i < Bankers.MAX_PROCESSES; i++){
 			for(int j=0;j<Bankers.MAX_RESOURCES; j++){
 				temp[i][j] = this.matrix[i][j];
 			}
 		}
-		return temp;
+		Matrix cpy = new Matrix(name + " - Copy");
+		cpy.matrix = temp;
+		return cpy;
 	}
 	
 	//Initialize everything to our null valid (-1)
