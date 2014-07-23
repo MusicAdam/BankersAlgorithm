@@ -2,7 +2,7 @@
 public class Matrix {
 	
 	private int[][] matrix;
-	private String name;
+	public String name;
 	
 	public Matrix(String name){
 		this.matrix = new int[Bankers.MAX_PROCESSES][Bankers.MAX_RESOURCES];
@@ -157,7 +157,7 @@ public class Matrix {
 	
 	//Copy fxn
 	public Matrix copy(){
-		int[][] temp = new int[Bankers.MAX_RESOURCES][Bankers.MAX_PROCESSES];
+		int[][] temp = new int[Bankers.MAX_PROCESSES][Bankers.MAX_RESOURCES];
 		for(int i=0; i < Bankers.MAX_PROCESSES; i++){
 			for(int j=0;j<Bankers.MAX_RESOURCES; j++){
 				temp[i][j] = this.matrix[i][j];

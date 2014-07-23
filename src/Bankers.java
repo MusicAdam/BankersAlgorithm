@@ -3,90 +3,26 @@ import java.util.Random;
 
 
 public class Bankers {
-	public static final int MAX_RESOURCES = 10;	//Max number of resources in the system
-	public static final int MAX_PROCESSES = 10;	//Max number of processes in the system
-	public static final int MAX_INSTANCE  = 6;  //Max number of resource instances that are avaiable
+	public static final int MAX_RESOURCES = 3;	//Max number of resources in the system
+	public static final int MAX_PROCESSES = 5;	//Max number of processes in the system
 	
 	Matrix allocation;			//This matrix defines what resources are currently allocated in the system
 	Matrix max;					//The total number of resouces the processes need to complete. 
 	int[] available;			//The number of resouces available after each process completes Previous row + allocation[process]
 	Matrix need;				//The current number of resources each process needs to complete. Max - allocation
 	
-	Process[] processes;		//All the processes currently in the system.
+	boolean[] processes;		//All the processes currently in the system.
 	
 	int lastCompleted;			//The index of the last completed process in the avaiable matrix.
 	
-	public Process generateProcess(){
-		Process p = null;
-		int index = allocation.nextAvailableIndex();
-
+	public int[] subArrays(int[] arr1, int[] arr2){
+		int[] result = new int[arr1.length];
 		
-		if(index != -1){ //Only generate a new process if the system is not full
-			Random r = new Random();
-			int[] maxResources = new int[MAX_RESOURCES]; //Generate the resources required to complete
-			int[] randAvailable = new int[MAX_RESOURCES]; //Generate the resources already acquired
-			
-			for(int i = 0; i < MAX_RESOURCES; i++){
-				maxResources[i] = (int)(r.nextFloat() * MAX_INSTANCE + 1); //Generate a random integer between 1 and MAX_INSTANCE
-				randAvailable[i] = (int)(r.nextFloat() * (MAX_INSTANCE/2)); //0 - MAX_INSTANCE/2
-				
-				while(maxResources[i] < randAvailable[i]){
-					maxResources[i] = (int)(r.nextFloat() * MAX_INSTANCE + 1); // Needs to be greater than rand
-				}
-				this.available[i] += randAvailable[i];
-			}
-			
-			p = new Process(index, maxResources);
-			
-			//Check if add is valid (can the system complete from this point?)
-			//Copy all matrices
-			Matrix allocationCpy = allocation.copy();
-			Matrix maxCpy = max.copy();
-			int[] availableCpy = available.clone();
-			Matrix needCpy = need.copy();
-			Process[] processesCpy = processes.clone();
-			processesCpy[index] = p;
-			allocationCpy.setRow(index, randAvailable);
-			
-			for(int i = 0; i < processes.length; i++){
-				Process completed = null;
-				if((completed = stepMatrices(allocationCpy, maxCpy, availableCpy, needCpy, processesCpy)) != null){
-
-					deleteElemFromArray(processesCpy, completed);
-					
-				}
-			}
-			
-			if(processArrayIsEmpty(processesCpy)){		
-				
-				max.setRow(index, maxResources);
-				allocation.setRow(index, randAvailable);
-				need = max.sub(allocation);
-			
-				System.out.println(need.toString());
-				System.out.println(allocation.toString());
-				System.out.println(max.toString());
-				System.out.print("Available Ledger: ");
-				
-				for(int i: this.available){
-					System.out.print(i+" ");
-				}
-				System.out.println();
-			}else{
-				System.out.println(need.toString());
-				System.out.println(allocation.toString());
-				System.out.println(max.toString());
-				System.out.print("Available Ledger: ");
-				
-				for(int i: this.available){
-					System.out.print(i+" ");
-				}
-				System.out.println();
-
-			}
+		for(int i = 0; i < arr1.length; i++){
+			result[i] = arr1[i] - arr2[i];
 		}
 		
-		return p;
+		return result;
 	}
 	
 	public void deleteElemFromArray(Process[] array, Process p){
@@ -119,58 +55,85 @@ public class Bankers {
 	}
 	
 	//Steps through all the matrices returning the process that was completed
-	public Process stepMatrices(Matrix allocation, Matrix max, int[] available, Matrix need, Process[] processes) {
-		Process completed = null;
-		int i=0;
+	public int stepMatrices() {
+		int completed = -1;
 		//Iterate through each process and complete the first one that can be completed
-		for(Process  p : processes){
-			if(p == null) continue;
-			
-			int index = p.getId();
-			
-
-			
-			if(need.rowIsLessThanOrEqualTo(index, available)){
-				completed = p;
-				available = allocation.addRows(index, available).getRow(index);
-				allocation.deleteRow(index);
-				max.deleteRow(index);
-				need.deleteRow(index);
-				break;
+		for(int index = 0; index < MAX_PROCESSES; index++){
+			if(processes[index] == false){
+				if(need.rowIsLessThanOrEqualTo(index, available)){
+					available = allocation.addRows(index, available).getRow(index);
+					//printAvailable();
+					allocation.deleteRow(index);
+					max.deleteRow(index);
+					need.deleteRow(index);
+					processes[index] = true;
+					completed = index;
+					break;
+				}
 			}
 		}
+
 		return completed;
+	}
+	
+	public void printAvailable(){
+		for(int i: this.available){
+			System.out.print(i+" ");
+		}
+		System.out.println();
 	}
 	
 	public Bankers(){
 		//Initialize variables
-		processes 	= new Process[MAX_PROCESSES];
+		processes 	= new boolean[MAX_PROCESSES];
 		allocation 	= new Matrix("Allocation");
 		max 		= new Matrix("Max");
 		available	= new int[MAX_RESOURCES];
 		need 		= new Matrix("Need");
 		
-		lastCompleted = -1;
+		allocation.setRow(0,  new int[]{0, 1, 0});
+		allocation.setRow(1,  new int[]{2, 0, 0});
+		allocation.setRow(2,  new int[]{3, 0, 2});
+		allocation.setRow(3,  new int[]{2, 1, 1});
+		allocation.setRow(4,  new int[]{0, 0, 2});
+		
+		max.setRow(0, new int[]{7, 5, 3});
+		max.setRow(1,  new int[]{3, 2, 2});
+		max.setRow(2,  new int[]{9, 0, 2});
+		max.setRow(3,  new int[]{2, 2, 2});
+		max.setRow(4,  new int[]{4, 3, 3});
+		
+		need = max.sub(allocation);
+		need.name = "Need";
+		
+		available = new int[]{3, 3, 2};
+		
+		System.out.println(allocation);
+		System.out.println(max);
+		System.out.println(need);
+		
 	}
 	
 	public void run(){
-		Process p = null;
-		
-		for(int i=0;i<8;i++)
-			processes[i]=generateProcess();
-		
 		System.out.println("---------------------------");
 		
+
+		System.out.print("Safe sequence: ");
 		
-		for(int i=0; i<50; i++){
-			p = generateProcess();
-			if(addProcessArray(processes,p)){
-				System.out.println("Process Added "+p.getId());
+		for(int i=0; i<MAX_PROCESSES; i++){
+			int completed = -1;
+			//p = generateProcess();
+			//if(addProcessArray(processes,p)){
+			//	System.out.println("Process Added "+p.getId());
+			//}
+			
+			//System.out.println("--------- START STEP -----------");
+			
+			if((completed = stepMatrices()) != -1){
+				processes[completed] = true;
+				System.out.print(completed + " ");
 			}
-			if((p = stepMatrices(this.allocation, this.max, this.available, this.need, this.processes)) != null){
-				deleteElemFromArray(this.processes, p);
-				System.out.println("Process "+(p.getId())+" has completed successfully");
-			}
+			//System.out.println("--------- END STEP -----------");
 
 		
 		}
