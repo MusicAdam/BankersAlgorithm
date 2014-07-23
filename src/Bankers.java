@@ -28,10 +28,10 @@ public class Bankers {
 			for(int i = 0; i < MAX_RESOURCES; i++){
 				maxResources[i] = (int)(r.nextFloat() * MAX_INSTANCE + 1); //Generate a random integer between 1 and MAX_INSTANCE
 				randAvailable[i] = (int)(r.nextFloat() * (MAX_INSTANCE/2)); //0 - MAX_INSTANCE/2
+				this.available[i] += randAvailable[i];
 			}
 			
 			p = new Process(index, maxResources);
-			
 			
 			//Check if add is valid (can the system complete from this point?)
 			//Copy all matrices
@@ -46,21 +46,32 @@ public class Bankers {
 			for(int i = 0; i < processes.length; i++){
 				Process completed = null;
 				if((completed = stepMatrices(allocationCpy, maxCpy, availableCpy, needCpy, processesCpy)) != null){
+
 					deleteElemFromArray(processesCpy, completed);
+					
 				}
 			}
 			
-			if(processArrayIsEmpty(processesCpy)){
-				System.out.println("YES MOFO");
+			if(processArrayIsEmpty(processesCpy)){		
+				
+				need.setRow(index, maxResources);
+				allocation.setRow(index, randAvailable);
+				allocationCpy = allocation.copy();
+				allocationCpy = allocationCpy.addRows(index, need.getRow(index));
+				max.setRow(index,allocationCpy.getRow(index));
+				
+				System.out.println(need.toString());
+				System.out.println(allocation.toString());
+				System.out.println(max.toString());
+				System.out.print("Available Ledger: ");
+				
+				for(int i: this.available){
+					System.out.print(i+" ");
+				}
+				System.out.println();
 			}else{
-				System.out.println("NO DAMN :(");
+
 			}
-			//Yes
-				//Update to allocation matrix
-				//update to max matrix
-				//Update to need matrix
-			//No
-				//Skip or retry? i dunno
 		}
 		
 		return p;
@@ -87,11 +98,14 @@ public class Bankers {
 	//Steps through all the matrices returning the process that was completed
 	public Process stepMatrices(Matrix allocation, Matrix max, int[] available, Matrix need, Process[] processes) {
 		Process completed = null;
+		int i=0;
 		//Iterate through each process and complete the first one that can be completed
 		for(Process  p : processes){
 			if(p == null) continue;
 			
 			int index = p.getId();
+			
+
 			
 			if(need.rowIsLessThanOrEqualTo(index, available)){
 				completed = p;
@@ -116,19 +130,28 @@ public class Bankers {
 	}
 	
 	public void run(){
-		/*do{
-			//Generate new process
-			//Update matrices
-			//Simulate allocation
-			// ??
-			//Profit
-		}while(NOT EXIT CONDITION);*/
-		generateProcess();
+
+		int temp = (int)(Math.random()*9)+1;
+		Process p = null;
+		for(int i=0;i<temp;i++)
+			processes[i]=generateProcess();
+		System.out.println("---------------------------");
+		
+		
+		for(int i=0; i<50; i++){
+			if((p = stepMatrices(this.allocation, this.max, this.available, this.need, this.processes)) != null){
+				deleteElemFromArray(this.processes, p);
+				System.out.println("Process "+(p.getId())+" has completed successfully");
+			}
+			generateProcess();	
+		
+		}
 	}
 	
 	public static void main(String[] args) {
 		Bankers b = new Bankers();
 		b.run();
+		
 	}
 
 }

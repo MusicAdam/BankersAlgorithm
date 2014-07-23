@@ -76,6 +76,7 @@ public class Matrix {
 		return col;
 	}
 	
+	
 	//Adds this matrix to the other matrix, you better not give it a different sized matrix. You don't want to know what will happen (indexOutOfBoundsException...)
 	public Matrix add(Matrix m){
 		Matrix result = new Matrix(name + " + " + m.name);
@@ -150,7 +151,7 @@ public class Matrix {
 	
 	public void deleteRow(int index){
 		for(int i = 0; i < Bankers.MAX_RESOURCES; i++){
-			matrix[index][i] = -1;
+			this.matrix[index][i] = -1;
 		}
 	}
 	
