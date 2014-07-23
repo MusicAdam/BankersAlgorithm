@@ -11,6 +11,30 @@ public class Matrix {
 		initialize();
 	}
 	
+	//This gets the next available index (first row that is null)
+	public int nextAvailableIndex(){
+		int index = -1;
+		for(int i = 0; i < Bankers.MAX_PROCESSES; i++){
+			if(matrix[i][0] == -1){ //Only check the rest of the elements if the first one is null
+				index = i;
+				
+				for(int j = 1; j < Bankers.MAX_RESOURCES; j++){
+					if(matrix[i][j] != -1){
+						index = -1;
+						break;
+					}
+				}
+				
+				if(index != -1)
+					break;
+			}
+		}
+		
+		return index;
+	}
+	
+	public boolean isFull(){ return (nextAvailableIndex() == -1); }
+	
 	//J will represent the appropriate row to be summed
 	public int getRowSum(int i){
 		int val = 0;
