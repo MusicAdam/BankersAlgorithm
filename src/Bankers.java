@@ -19,6 +19,7 @@ public class Bankers {
 	public Process generateProcess(){
 		Process p = null;
 		int index = allocation.nextAvailableIndex();
+
 		
 		if(index != -1){ //Only generate a new process if the system is not full
 			Random r = new Random();
@@ -28,6 +29,10 @@ public class Bankers {
 			for(int i = 0; i < MAX_RESOURCES; i++){
 				maxResources[i] = (int)(r.nextFloat() * MAX_INSTANCE + 1); //Generate a random integer between 1 and MAX_INSTANCE
 				randAvailable[i] = (int)(r.nextFloat() * (MAX_INSTANCE/2)); //0 - MAX_INSTANCE/2
+				
+				while(maxResources[i] < randAvailable[i]){
+					maxResources[i] = (int)(r.nextFloat() * MAX_INSTANCE + 1); // Needs to be greater than rand
+				}
 				this.available[i] += randAvailable[i];
 			}
 			
@@ -54,12 +59,10 @@ public class Bankers {
 			
 			if(processArrayIsEmpty(processesCpy)){		
 				
-				need.setRow(index, maxResources);
+				max.setRow(index, maxResources);
 				allocation.setRow(index, randAvailable);
-				allocationCpy = allocation.copy();
-				allocationCpy = allocationCpy.addRows(index, need.getRow(index));
-				max.setRow(index,allocationCpy.getRow(index));
-				
+				need = max.sub(allocation);
+			
 				System.out.println(need.toString());
 				System.out.println(allocation.toString());
 				System.out.println(max.toString());
@@ -70,6 +73,15 @@ public class Bankers {
 				}
 				System.out.println();
 			}else{
+				System.out.println(need.toString());
+				System.out.println(allocation.toString());
+				System.out.println(max.toString());
+				System.out.print("Available Ledger: ");
+				
+				for(int i: this.available){
+					System.out.print(i+" ");
+				}
+				System.out.println();
 
 			}
 		}
@@ -95,6 +107,17 @@ public class Bankers {
 		return true;
 	}
 	
+	public boolean addProcessArray(Process[] array, Process p){
+		for(int i = 0; i < array.length; i++){
+			if(array[i] == null){
+				array[i] = p;
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	//Steps through all the matrices returning the process that was completed
 	public Process stepMatrices(Matrix allocation, Matrix max, int[] available, Matrix need, Process[] processes) {
 		Process completed = null;
@@ -113,6 +136,7 @@ public class Bankers {
 				allocation.deleteRow(index);
 				max.deleteRow(index);
 				need.deleteRow(index);
+				break;
 			}
 		}
 		return completed;
@@ -130,20 +154,24 @@ public class Bankers {
 	}
 	
 	public void run(){
-
-		int temp = (int)(Math.random()*9)+1;
 		Process p = null;
-		for(int i=0;i<temp;i++)
+		
+		for(int i=0;i<8;i++)
 			processes[i]=generateProcess();
+		
 		System.out.println("---------------------------");
 		
 		
 		for(int i=0; i<50; i++){
+			p = generateProcess();
+			if(addProcessArray(processes,p)){
+				System.out.println("Process Added "+p.getId());
+			}
 			if((p = stepMatrices(this.allocation, this.max, this.available, this.need, this.processes)) != null){
 				deleteElemFromArray(this.processes, p);
 				System.out.println("Process "+(p.getId())+" has completed successfully");
 			}
-			generateProcess();	
+
 		
 		}
 	}
