@@ -119,18 +119,39 @@ public class Matrix {
 	}
 	
 	//Checks this.row[index] <= m.row[index]
-	public boolean rowIsLessThanOrEqualTo(int index, Matrix m){
+	public boolean rowIsLessThanOrEqualTo(int index, int[] row){
 		if(index < 0 || index >= Bankers.MAX_PROCESSES) return false; //Sanity check
 		
 		boolean result = true;
 		
 		for(int i = 0; i < Bankers.MAX_RESOURCES; i++){
-			result = matrix[index][i] <= m.matrix[index][i];
+			result = matrix[index][i] <= row[i];
 			if(!result) break; //Break when false incase following values result in true
 		}
 		
 		return result;
 		
+	}
+	
+	//this.row[index] + m.row[mindex]
+	public Matrix addRows(int index, int[] row){
+		Matrix result = this.copy();
+		
+		int[] thisRow = getRow(index);
+		int[] sumRow = new int[thisRow.length];
+		
+		for(int i = 0; i < thisRow.length; i++){
+			sumRow[i] = thisRow[i] + row[i];
+		}
+		
+		result.setRow(index, sumRow);
+		return result;
+	}
+	
+	public void deleteRow(int index){
+		for(int i = 0; i < Bankers.MAX_RESOURCES; i++){
+			matrix[index][i] = -1;
+		}
 	}
 	
 	//Copy fxn
